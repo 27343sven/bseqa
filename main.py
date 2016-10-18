@@ -18,9 +18,9 @@ def get_sequence(isNuc):
         #todo
         #importeren van sequenties
         if isNuc:
-            seq1, seq2 = "ATCG", "ATCG"
+            seq1, seq2 = "ATAACG", "ATCG"
         else:
-            seq1, seq2 = "HIMSTB", "HIRPMS"
+            seq1, seq2 = "HIMST", "HIRPMS"
     return(seq1, seq2)
 
 def input_sequence(isNuc, text):
@@ -43,7 +43,7 @@ def keuze_menu():
     print("Welkom bij mijn alignment programma!")
     isGlobal = keuze("Wilt u een global(1) of een local(2) alignment maken?")
     isNuc = keuze("alignment met nucleotiden(1) of met peptiden(2)?")
-    isStandaard = keuze("Wilt u een standaard matrix(1) gebruiken of een importeren(2)?")
+    isStandaard = keuze("Wilt u een standaard matrix(1) gebruiken of wilt u er één importeren(2)?")
     if not isStandaard:
         matrix = import_matrix(isNuc)
     else:
@@ -100,12 +100,13 @@ def return_matrix(isNuc):
         return([['A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 'I', 'L', 'K', 'M', 'F', 'P', 'S', 'T', 'W', 'Y', 'V', 'B', 'Z', 'X', '*'], ['A', '4', '-1', '-2', '-2', '0', '-1', '-1', '0', '-2', '-1', '-1', '-1', '-1', '-2', '-1', '1', '0', '-3', '-2', '0', '-2', '-1', '0', '-4'], ['R', '-1', '5', '0', '-2', '-3', '1', '0', '-2', '0', '-3', '-2', '2', '-1', '-3', '-2', '-1', '-1', '-3', '-2', '-3', '-1', '0', '-1', '-4'], ['N', '-2', '0', '6', '1', '-3', '0', '0', '0', '1', '-3', '-3', '0', '-2', '-3', '-2', '1', '0', '-4', '-2', '-3', '3', '0', '-1', '-4'], ['D', '-2', '-2', '1', '6', '-3', '0', '2', '-1', '-1', '-3', '-4', '-1', '-3', '-3', '-1', '0', '-1', '-4', '-3', '-3', '4', '1', '-1', '-4'], ['C', '0', '-3', '-3', '-3', '9', '-3', '-4', '-3', '-3', '-1', '-1', '-3', '-1', '-2', '-3', '-1', '-1', '-2', '-2', '-1', '-3', '-3', '-2', '-4'], ['Q', '-1', '1', '0', '0', '-3', '5', '2', '-2', '0', '-3', '-2', '1', '0', '-3', '-1', '0', '-1', '-2', '-1', '-2', '0', '3', '-1', '-4'], ['E', '-1', '0', '0', '2', '-4', '2', '5', '-2', '0', '-3', '-3', '1', '-2', '-3', '-1', '0', '-1', '-3', '-2', '-2', '1', '4', '-1', '-4'], ['G', '0', '-2', '0', '-1', '-3', '-2', '-2', '6', '-2', '-4', '-4', '-2', '-3', '-3', '-2', '0', '-2', '-2', '-3', '-3', '-1', '-2', '-1', '-4'], ['H', '-2', '0', '1', '-1', '-3', '0', '0', '-2', '8', '-3', '-3', '-1', '-2', '-1', '-2', '-1', '-2', '-2', '2', '-3', '0', '0', '-1', '-4'], ['I', '-1', '-3', '-3', '-3', '-1', '-3', '-3', '-4', '-3', '4', '2', '-3', '1', '0', '-3', '-2', '-1', '-3', '-1', '3', '-3', '-3', '-1', '-4'], ['L', '-1', '-2', '-3', '-4', '-1', '-2', '-3', '-4', '-3', '2', '4', '-2', '2', '0', '-3', '-2', '-1', '-2', '-1', '1', '-4', '-3', '-1', '-4'], ['K', '-1', '2', '0', '-1', '-3', '1', '1', '-2', '-1', '-3', '-2', '5', '-1', '-3', '-1', '0', '-1', '-3', '-2', '-2', '0', '1', '-1', '-4'], ['M', '-1', '-1', '-2', '-3', '-1', '0', '-2', '-3', '-2', '1', '2', '-1', '5', '0', '-2', '-1', '-1', '-1', '-1', '1', '-3', '-1', '-1', '-4'], ['F', '-2', '-3', '-3', '-3', '-2', '-3', '-3', '-3', '-1', '0', '0', '-3', '0', '6', '-4', '-2', '-2', '1', '3', '-1', '-3', '-3', '-1', '-4'], ['P', '-1', '-2', '-2', '-1', '-3', '-1', '-1', '-2', '-2', '-3', '-3', '-1', '-2', '-4', '7', '-1', '-1', '-4', '-3', '-2', '-2', '-1', '-2', '-4'], ['S', '1', '-1', '1', '0', '-1', '0', '0', '0', '-1', '-2', '-2', '0', '-1', '-2', '-1', '4', '1', '-3', '-2', '-2', '0', '0', '0', '-4'], ['T', '0', '-1', '0', '-1', '-1', '-1', '-1', '-2', '-2', '-1', '-1', '-1', '-1', '-2', '-1', '1', '5', '-2', '-2', '0', '-1', '-1', '0', '-4'], ['W', '-3', '-3', '-4', '-4', '-2', '-2', '-3', '-2', '-2', '-3', '-2', '-3', '-1', '1', '-4', '-3', '-2', '11', '2', '-3', '-4', '-3', '-2', '-4'], ['Y', '-2', '-2', '-2', '-3', '-2', '-1', '-2', '-3', '2', '-1', '-1', '-2', '-1', '3', '-3', '-2', '-2', '2', '7', '-1', '-3', '-2', '-1', '-4'], ['V', '0', '-3', '-3', '-3', '-1', '-2', '-2', '-3', '-3', '3', '1', '-2', '1', '-1', '-2', '-2', '0', '-3', '-1', '4', '-3', '-2', '-1', '-4'], ['B', '-2', '-1', '3', '4', '-3', '0', '1', '-1', '0', '-3', '-4', '0', '-3', '-3', '-2', '0', '-1', '-4', '-3', '-3', '4', '1', '-1', '-4'], ['Z', '-1', '0', '0', '1', '-3', '3', '4', '-2', '0', '-3', '-3', '1', '-1', '-3', '-1', '0', '-1', '-3', '-2', '-2', '1', '4', '-1', '-4'], ['X', '0', '-1', '-1', '-1', '-2', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-1', '-2', '0', '0', '-2', '-1', '-1', '-1', '-1', '-1', '-4'], ['*', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '-4', '1']])
 
 def search_in_matrix(x, y, matrix):
-    title_row = matrix.pop(0)
+    title_row = matrix[0]
     value = ""
     if x in title_row and y in title_row:
-        for i in matrix:
-            if i[0] == x:
-                value = i[title_row.index(y) + 1]
+        for i in range(len(matrix)):
+            if x != 0:
+                if matrix[i][0] == x:
+                    value = matrix[i][title_row.index(y) + 1]
     else:
         print("gegeven waardes staan niet in de matrix!")
         return(0)
@@ -131,7 +132,6 @@ def print_table(seq1, seq2, table):
         test_table = invert_table(inverted_table)
         for x in test_table:
             print("".join(x))
-            
     else:
         print("gegeven sequenties komen niet overeen met de tabel")
         
@@ -167,17 +167,78 @@ def import_matrix(isNuc):
     return(matrix)
 
 def make_global_alignment(seq1, seq2, isNuc, matrix):
-    print(search_in_matrix("*", "A", matrix))
-    
     table = make_table(seq1, seq2, matrix)
+    table = fill_table(seq1, seq2, matrix, table)
     print_table(seq1, seq2, table)
-    print(table)
-    for y in range(len(seq1)):
-        for x in range(len(seq2)):
-            possible_ways = [int(table_value(x, y+1, table)) + int(search_in_matrix("*", "A", matrix)),
-                             int(table_value(x, y, table)) + int(search_in_matrix(seq1[y], seq2[x], matrix)),
-                             int(table_value(x+1, y, table)) + int(search_in_matrix("*", "A", matrix))]
-            print(possible_ways)
+    end = False
+    x, y, new_seq1, new_seq2 = len(seq1), len(seq2), "", ""
+    while end == False:
+        direction = table[x][y].split("[")[1].split("]")[0]
+        if len(direction) == 1:
+            if direction == "|":
+                new_seq1 += seq1[x-1]
+                new_seq2 += "_"
+                x -= 1
+            elif direction == "\\":
+                new_seq1 += seq1[x-1]
+                new_seq2 += seq2[y-1]
+                x -= 1
+                y -= 1
+            elif direction == "-":
+                new_seq1 += "_"
+                new_seq2 += seq2[y-1]
+                y -= 1
+            elif direction == "0":
+                end = True
+            else:
+                print("er heeft zich een fout voorgedaan in de traceback")
+                end = True
+        else:
+            
+            value_list = []
+            for x in direction:
+                if x == "|":
+                    value_list.append(int(table_value(x+1, y, table)))
+                elif x == "\\":
+                    value_list.append(int(table_value(x+1, y+1, table)))
+                elif x == "-":
+                    value_list.append(int(table_value(x, y+1, table)))
+                else:
+                    print("er heeft zich een fout voorgedaan in (multiple) traceback")
+            index = value_list.index(max(value))
+            if index == 0:
+                new_seq1 += "_"
+                new_seq2 += seq2[y-1]
+                y -= 1
+            if index == 1:
+                new_seq1 += seq1[x-1]
+                new_seq2 += seq2[y-1]
+                x -= 1
+                y -= 1
+            if index == 2:
+                new_seq1 += seq1[x-1]
+                new_seq2 += "_"
+                x -= 1
+    print(new_seq1[::-1])
+    print(new_seq2[::-1])
+    
+
+def fill_table(seq1, seq2, matrix, table):
+    for y in range(len(seq2)):
+        for x in range(len(seq1)):
+            dir_str = ""
+            possible_ways = [int(table_value(x+1, y, table)) + int(search_in_matrix("*", "A", matrix)),
+                             int(table_value(x, y, table)) + int(search_in_matrix(seq2[y], seq1[x], matrix)),
+                             int(table_value(x, y+1, table)) + int(search_in_matrix("*", "A", matrix))]
+            hoogste = max(possible_ways)
+            if possible_ways[0] == hoogste:
+                dir_str += "-"
+            if possible_ways[1] == hoogste:
+                dir_str += "\\"
+            if possible_ways[2] == hoogste:
+                dir_str += "|"
+            table[x+1][y+1] = "[" + dir_str + "]" + str(hoogste)
+    return(table)
 
 def table_value(x, y, table):
     return(table[x][y].split("]")[1])
