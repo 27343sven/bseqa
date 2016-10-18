@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import os
 
 def main():
@@ -18,7 +20,7 @@ def get_sequence(isNuc):
         if isNuc:
             seq1, seq2 = "ATCG", "ATCG"
         else:
-            seq1, seq2 = "HIMSTB", "HIRPM"
+            seq1, seq2 = "HIMSTB", "HIRPMS"
     return(seq1, seq2)
 
 def input_sequence(isNuc, text):
