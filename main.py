@@ -2,6 +2,13 @@
 
 import os
 
+TEST_SEQ1 = "mltaeekaavtafwgkvkvdevggealgrllvvypwtqrffesfgdlstadavmnnpkvkahgkkvldsfsngmkhlddlkgtfaalselhcdklhvdpenfkllgnvlvvvlarnfgkeftpvlqadfqkvvagvanalahryh"
+TEST_SEQ2 = "mvlsaadkgnvkaawgkvgghaaeygaealermflsfpttktyfphfdlshgsaqvkghgakvaaaltkavehlddlpgalselsdlhahklrvdpvnfkllshsllvtlashlpsdftpavhasldkflanvstvltskyr"
+TEST_SEQ3 = "mvhltaeekslvsglwgkvnvdevggealgrllivypwtqrffdsfgdlstpdavmsnakvkahgkkvlnsfsdglknldnlkgtfaklselhcdklhvdpenfkllgnvlvcvlahhfgkeftpqvqaayqkvvagvanalahkyh"
+TEST_SEQ4 = "mvlspadktnikstwdkigghagdyggealdrtfqsfpttktyfphfdlspgsaqvkahgkkvadalttavahlddlpgalsalsdlhayklrvdpvnfkllshcllvtlachhpteftpavhasldkffaavstvltskyr"
+TEST_SEQ5 = "mpivdtgsvaplsaaektkirsawapvystyetsgvdilvkfftstpaaqeffpkfkglttadqlkksadvrwhaeriinavndavasmddtekmsmklrdlsgkhaksfqvdpqyfkvlaaviadtvaagdagfeklmsmicillrsay"
+
+
 def main():
     isGlobal, isNuc, isStandaard, matrix = keuze_menu()
     seq1, seq2 = get_sequence(isNuc)
@@ -20,8 +27,8 @@ def get_sequence(isNuc):
         if isNuc:
             seq1, seq2 = "ATAACG", "ATCG"
         else:
-            seq1, seq2 = "HIMST", "HIRPMS"
-    return(seq1, seq2)
+            seq1, seq2 = TEST_SEQ2, TEST_SEQ5
+    return(seq1.upper(), seq2.upper())
 
 def input_sequence(isNuc, text):
     print(text)
@@ -134,6 +141,7 @@ def print_table(seq1, seq2, table):
             print("".join(x))
     else:
         print("gegeven sequenties komen niet overeen met de tabel")
+    return(test_table)
         
 
 def get_max_row_length(row):
@@ -169,9 +177,10 @@ def import_matrix(isNuc):
 def make_global_alignment(seq1, seq2, isNuc, matrix):
     table = make_table(seq1, seq2, matrix)
     table = fill_table(seq1, seq2, matrix, table)
-    print_table(seq1, seq2, table)
+    info = print_table(seq1, seq2, table)
     end = False
     x, y, new_seq1, new_seq2 = len(seq1), len(seq2), "", ""
+    count = 0
     while end == False:
         direction = table[x][y].split("[")[1].split("]")[0]
         if len(direction) == 1:
@@ -196,16 +205,18 @@ def make_global_alignment(seq1, seq2, isNuc, matrix):
         else:
             
             value_list = []
-            for x in direction:
-                if x == "|":
+            for z in direction:
+                if z == "|":
                     value_list.append(int(table_value(x+1, y, table)))
-                elif x == "\\":
+                elif z == "\\":
                     value_list.append(int(table_value(x+1, y+1, table)))
-                elif x == "-":
+                elif z == "-":
                     value_list.append(int(table_value(x, y+1, table)))
                 else:
                     print("er heeft zich een fout voorgedaan in (multiple) traceback")
-            index = value_list.index(max(value))
+            index = value_list.index(max(value_list))
+            if value_list.count(max(value_list)) > 1:
+                count += 1
             if index == 0:
                 new_seq1 += "_"
                 new_seq2 += seq2[y-1]
@@ -221,6 +232,12 @@ def make_global_alignment(seq1, seq2, isNuc, matrix):
                 x -= 1
     print(new_seq1[::-1])
     print(new_seq2[::-1])
+    print("er waren", count, "tracebacks met dezelfde")
+    print("alignment wordt opgeslagen in alignment.csv")
+    file = open("alignment.csv", "w")
+    for x in info:
+        file.write(";".join(x) + "\n")
+    file.close()
     
 
 def fill_table(seq1, seq2, matrix, table):
