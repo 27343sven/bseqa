@@ -113,8 +113,44 @@ def search_in_matrix(x, y, matrix):
         print("er zit een fout in de matrix!, kon geen int maken van matrix waarde")
         return(0)
     return(value)
+
+def print_table(seq1, seq2, table):
+    test_table = table
+    if len(seq1) + 1 == len(test_table) and len(seq2) + 1 == len(test_table[0]):
+        test_table = [[" "] + list(seq2)] + test_table
+        for x in range(len(test_table)):
+            if x < 2:
+                test_table[x] = [" "] + test_table[x]
+            else:
+                test_table[x] = [seq1[x-2]] + test_table[x]
+        inverted_table = invert_table(test_table)
+        for x in range(len(inverted_table)):
+            length = get_max_row_length(inverted_table[x])
+            for y in range(len(inverted_table[x])):
+                inverted_table[x][y] = inverted_table[x][y].ljust(length + 2)
+        test_table = invert_table(inverted_table)
+        for x in test_table:
+            print("".join(x))
+            
+    else:
+        print("gegeven sequenties komen niet overeen met de tabel")
         
-               
+
+def get_max_row_length(row):
+    length = 0
+    for x in row:
+        if len(str(x)) > length:
+            length = len(str(x))
+    return(length)
+
+def invert_table(table):
+    new_table = []
+    for x in range(len(table[0])):
+        new_row = []
+        for y in range(len(table)):
+            new_row.append(table[y][x])
+        new_table.append(new_row)
+    return(new_table)
 
 def import_matrix(isNuc):
     fileName = ""
@@ -131,21 +167,36 @@ def import_matrix(isNuc):
     return(matrix)
 
 def make_global_alignment(seq1, seq2, isNuc, matrix):
+    print(search_in_matrix("*", "A", matrix))
+    
+    table = make_table(seq1, seq2, matrix)
+    print_table(seq1, seq2, table)
+    print(table)
+    for y in range(len(seq1)):
+        for x in range(len(seq2)):
+            possible_ways = [int(table_value(x, y+1, table)) + int(search_in_matrix("*", "A", matrix)),
+                             int(table_value(x, y, table)) + int(search_in_matrix(seq1[y], seq2[x], matrix)),
+                             int(table_value(x+1, y, table)) + int(search_in_matrix("*", "A", matrix))]
+            print(possible_ways)
+
+def table_value(x, y, table):
+    return(table[x][y].split("]")[1])
+
+def make_table(seq1, seq2, matrix):
     new_table, first_row, current_value = [], [], 0
     gap_waarde = int(search_in_matrix("*", "A", matrix))
     for x in range(len(seq2) + 1):
         if x != 0:
             first_row.append("[-]" + str(current_value))
         else:
-            first_row.append(str(current_value))
+            first_row.append("[0]" + str(current_value))
         current_value += gap_waarde
     new_table.append(first_row)
     current_value = gap_waarde
     for x in range(len(seq1)):
-        new_table.append(["[|]" + str(current_value)] + [""] * len(seq1))
+        new_table.append(["[|]" + str(current_value)] + [""] * len(seq2))
         current_value += gap_waarde
-    for x in new_table:
-        print(x)
+    return(new_table)
        
 
 main()
