@@ -7,12 +7,18 @@ TEST_SEQ2 = "mvlsaadkgnvkaawgkvgghaaeygaealermflsfpttktyfphfdlshgsaqvkghgakvaaal
 TEST_SEQ3 = "mvhltaeekslvsglwgkvnvdevggealgrllivypwtqrffdsfgdlstpdavmsnakvkahgkkvlnsfsdglknldnlkgtfaklselhcdklhvdpenfkllgnvlvcvlahhfgkeftpqvqaayqkvvagvanalahkyh"
 TEST_SEQ4 = "mvlspadktnikstwdkigghagdyggealdrtfqsfpttktyfphfdlspgsaqvkahgkkvadalttavahlddlpgalsalsdlhayklrvdpvnfkllshcllvtlachhpteftpavhasldkffaavstvltskyr"
 TEST_SEQ5 = "mpivdtgsvaplsaaektkirsawapvystyetsgvdilvkfftstpaaqeffpkfkglttadqlkksadvrwhaeriinavndavasmddtekmsmklrdlsgkhaksfqvdpqyfkvlaaviadtvaagdagfeklmsmicillrsay"
-
+TEST_SEQ6 = "mpivdtgs"
+TEST_SEQ7 = "mvlspadkt"
 
 def main():
     isGlobal, isNuc, isStandaard, matrix = keuze_menu()
     seq1, seq2 = get_sequence(isNuc)
-    make_global_alignment(seq1, seq2, isNuc, matrix)
+    if isGlobal:
+        make_alignment(seq1, seq2, isNuc, matrix, isGlobal)
+    else:
+        make_alignment(seq1, seq2, isNuc, matrix, isGlobal)
+    if keuze("wilt u nog een alignment maken(1), of afsluiten(2)"):
+        main()
     
     
 
@@ -27,7 +33,7 @@ def get_sequence(isNuc):
         if isNuc:
             seq1, seq2 = "ATAACG", "ATCG"
         else:
-            seq1, seq2 = TEST_SEQ2, TEST_SEQ5
+            seq1, seq2 = TEST_SEQ4, TEST_SEQ7
     return(seq1.upper(), seq2.upper())
 
 def input_sequence(isNuc, text):
@@ -60,10 +66,11 @@ def keuze_menu():
 def keuze(text):
     print(text)
     keuze = input(":")
-    while keuze not in ["1", "2"]:
+    while keuze not in ["1", "2", 1, 2]:
+        print(type(keuze))
         print("geen geldige input.")
         keuze = input(":")
-    if keuze == "1":
+    if keuze in ["1", 1]:
         return(True)
     else:
         return(False)
@@ -174,12 +181,22 @@ def import_matrix(isNuc):
         matrix = process_matrix(fileName)
     return(matrix)
 
-def make_global_alignment(seq1, seq2, isNuc, matrix):
-    table = make_table(seq1, seq2, matrix)
-    table = fill_table(seq1, seq2, matrix, table)
+def make_alignment(seq1, seq2, isNuc, matrix, isGlobal):
+    table = make_table(seq1, seq2, matrix, isGlobal)
+    table = fill_table(seq1, seq2, matrix, table, isGlobal)
     info = print_table(seq1, seq2, table)
     end = False
-    x, y, new_seq1, new_seq2 = len(seq1), len(seq2), "", ""
+    x, y, new_seq1, new_seq2 = 0, 0, "", ""
+    if not isGlobal:
+        hoogste = 0
+        for test_x in range(len(table)):
+            for test_y in range(len(table[test_x])):
+                if int(table[test_x][test_y].split("]")[1]) > hoogste:
+                    hoogste = int(table[test_x][test_y].split("]")[1])
+                    x, y = test_x, test_y
+        test_x, test_y = x, y
+    else:
+        x, y = len(seq1), len(seq2)
     count = 0
     while end == False:
         direction = table[x][y].split("[")[1].split("]")[0]
@@ -205,48 +222,55 @@ def make_global_alignment(seq1, seq2, isNuc, matrix):
         else:
             
             value_list = []
+            sign_list = []
             for z in direction:
                 if z == "|":
-                    value_list.append(int(table_value(x+1, y, table)))
+                    value_list.append(int(table_value(x-1, y, table)))
+                    sign_list.append("|")
                 elif z == "\\":
-                    value_list.append(int(table_value(x+1, y+1, table)))
+                    value_list.append(int(table_value(x-1, y-1, table)))
+                    sign_list.append("\\")
                 elif z == "-":
-                    value_list.append(int(table_value(x, y+1, table)))
+                    value_list.append(int(table_value(x, y-1, table)))
+                    sign_list.append("-")
                 else:
                     print("er heeft zich een fout voorgedaan in (multiple) traceback")
             index = value_list.index(max(value_list))
             if value_list.count(max(value_list)) > 1:
                 count += 1
-            if index == 0:
+            if sign_list[index] == "-":
                 new_seq1 += "_"
                 new_seq2 += seq2[y-1]
                 y -= 1
-            if index == 1:
+            if sign_list[index] == "\\":
                 new_seq1 += seq1[x-1]
                 new_seq2 += seq2[y-1]
                 x -= 1
                 y -= 1
-            if index == 2:
+            if sign_list[index] == "|":
                 new_seq1 += seq1[x-1]
                 new_seq2 += "_"
                 x -= 1
     print(new_seq1[::-1])
     print(new_seq2[::-1])
-    print("er waren", count, "tracebacks met dezelfde")
+    if not isGlobal:
+        print("de hoogste alignment score is", hoogste, "op de coordinaten", test_x, test_y)
+    print("er waren", count, "momenten in de traceback waar twee opties even goed waren.")
     print("alignment wordt opgeslagen in alignment.csv")
     file = open("alignment.csv", "w")
     for x in info:
         file.write(";".join(x) + "\n")
-    file.close()
-    
+    file.close()  
 
-def fill_table(seq1, seq2, matrix, table):
+def fill_table(seq1, seq2, matrix, table, isGlobal):
     for y in range(len(seq2)):
         for x in range(len(seq1)):
             dir_str = ""
             possible_ways = [int(table_value(x+1, y, table)) + int(search_in_matrix("*", "A", matrix)),
                              int(table_value(x, y, table)) + int(search_in_matrix(seq2[y], seq1[x], matrix)),
                              int(table_value(x, y+1, table)) + int(search_in_matrix("*", "A", matrix))]
+            if not isGlobal:
+                possible_ways.append(0)
             hoogste = max(possible_ways)
             if possible_ways[0] == hoogste:
                 dir_str += "-"
@@ -254,26 +278,38 @@ def fill_table(seq1, seq2, matrix, table):
                 dir_str += "\\"
             if possible_ways[2] == hoogste:
                 dir_str += "|"
+            if not isGlobal and possible_ways[3] == hoogste:
+                dir_str = "0"
             table[x+1][y+1] = "[" + dir_str + "]" + str(hoogste)
     return(table)
 
 def table_value(x, y, table):
+    try:
+        test = table[x][y].split("]")[1]
+    except IndexError:
+        print("x:", x, "y:", y)
     return(table[x][y].split("]")[1])
 
-def make_table(seq1, seq2, matrix):
+def make_table(seq1, seq2, matrix, isGlobal):
     new_table, first_row, current_value = [], [], 0
     gap_waarde = int(search_in_matrix("*", "A", matrix))
     for x in range(len(seq2) + 1):
         if x != 0:
-            first_row.append("[-]" + str(current_value))
+            if not isGlobal:
+                first_row.append("[0]0")
+            else:
+                first_row.append("[-]" + str(current_value))
         else:
             first_row.append("[0]" + str(current_value))
         current_value += gap_waarde
     new_table.append(first_row)
     current_value = gap_waarde
     for x in range(len(seq1)):
-        new_table.append(["[|]" + str(current_value)] + [""] * len(seq2))
-        current_value += gap_waarde
+        if not isGlobal:
+            new_table.append(["[0]0"] + [""] * len(seq2))
+        else:
+            new_table.append(["[|]" + str(current_value)] + [""] * len(seq2))
+            current_value += gap_waarde
     return(new_table)
        
 
