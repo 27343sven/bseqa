@@ -33,7 +33,7 @@ def get_sequence(isNuc):
         if isNuc:
             seq1, seq2 = "ATAACG", "ATCG"
         else:
-            seq1, seq2 = TEST_SEQ4, TEST_SEQ7
+            seq1, seq2 = TEST_SEQ5, TEST_SEQ4
     return(seq1.upper(), seq2.upper())
 
 def input_sequence(isNuc, text):
@@ -194,11 +194,12 @@ def make_alignment(seq1, seq2, isNuc, matrix, isGlobal):
                 if int(table[test_x][test_y].split("]")[1]) > hoogste:
                     hoogste = int(table[test_x][test_y].split("]")[1])
                     x, y = test_x, test_y
-        test_x, test_y = x, y
+        end_x, end_y = x, y
     else:
         x, y = len(seq1), len(seq2)
     count = 0
     while end == False:
+        prev_x, prev_y = x, y
         direction = table[x][y].split("[")[1].split("]")[0]
         if len(direction) == 1:
             if direction == "|":
@@ -216,6 +217,9 @@ def make_alignment(seq1, seq2, isNuc, matrix, isGlobal):
                 y -= 1
             elif direction == "0":
                 end = True
+                if not isGlobal:
+                    start_x = x
+                    start_y = y
             else:
                 print("er heeft zich een fout voorgedaan in de traceback")
                 end = True
@@ -251,10 +255,13 @@ def make_alignment(seq1, seq2, isNuc, matrix, isGlobal):
                 new_seq1 += seq1[x-1]
                 new_seq2 += "_"
                 x -= 1
+            next_x, next_y = prev_x, prev_y
     print(new_seq1[::-1])
     print(new_seq2[::-1])
     if not isGlobal:
-        print("de hoogste alignment score is", hoogste, "op de coordinaten", test_x, test_y)
+        print("de hoogste alignment score is", hoogste, "op de coordinaten", end_y, end_x)
+        print("van seq1 is " + str(start_x + 1) + ".." + str(end_x) + " van de " + str(len(seq1)) + " meegenomen voor de alignment")
+        print("van seq2 is " + str(start_y + 1) + ".." + str(end_y) + " van de " + str(len(seq2)) + " meegenomen voor de alignment")
     print("er waren", count, "momenten in de traceback waar twee opties even goed waren.")
     print("alignment wordt opgeslagen in alignment.csv")
     file = open("alignment.csv", "w")
