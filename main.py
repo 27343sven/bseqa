@@ -10,13 +10,30 @@ TEST_SEQ5 = "mpivdtgsvaplsaaektkirsawapvystyetsgvdilvkfftstpaaqeffpkfkglttadqlkk
 TEST_SEQ6 = "mpivdtgs"
 TEST_SEQ7 = "mvlspadkt"
 
+def do_alignments(seqs):
+    isNuc = False
+    matrix = return_matrix(isNuc)
+    isGlobal = False
+    iteration_list = make_iterations(len(seqs))
+    for x in iteration_list:
+        print("------------------------------------------------")
+        print("seq" + str(x[0]) + " - seq" + str(x[1]))
+        make_alignment(seqs[x[0] - 1].upper(), seqs[x[1] - 1].upper(), isNuc, matrix, isGlobal, True, "seq" + str(x[0]) + "-seq" + str(x[1]) + ".csv")
+        print("------------------------------------------------")
+
+def make_iterations(length):
+    main_list = []
+    for x in range(length):
+        for y in range(x + 2, length + 1, 1):
+            main_list.append([x + 1, y])
+    return(main_list)
+        
+        
+
 def main():
     isGlobal, isNuc, isStandaard, matrix = keuze_menu()
     seq1, seq2 = get_sequence(isNuc)
-    if isGlobal:
-        make_alignment(seq1, seq2, isNuc, matrix, isGlobal)
-    else:
-        make_alignment(seq1, seq2, isNuc, matrix, isGlobal)
+    make_alignment(seq1, seq2, isNuc, matrix, isGlobal, False, "alignment.csv")
     if keuze("wilt u nog een alignment maken(1), of afsluiten(2)"):
         main()
     
@@ -129,7 +146,7 @@ def search_in_matrix(x, y, matrix):
         return(0)
     return(value)
 
-def print_table(seq1, seq2, table):
+def print_table(seq1, seq2, table, suppress):
     test_table = table
     if len(seq1) + 1 == len(test_table) and len(seq2) + 1 == len(test_table[0]):
         test_table = [[" "] + list(seq2)] + test_table
@@ -145,7 +162,8 @@ def print_table(seq1, seq2, table):
                 inverted_table[x][y] = inverted_table[x][y].ljust(length + 2)
         test_table = invert_table(inverted_table)
         for x in test_table:
-            print("".join(x))
+            if not suppress:
+                print("".join(x))
     else:
         print("gegeven sequenties komen niet overeen met de tabel")
     return(test_table)
@@ -181,10 +199,10 @@ def import_matrix(isNuc):
         matrix = process_matrix(fileName)
     return(matrix)
 
-def make_alignment(seq1, seq2, isNuc, matrix, isGlobal):
+def make_alignment(seq1, seq2, isNuc, matrix, isGlobal, suppress, fileName):
     table = make_table(seq1, seq2, matrix, isGlobal)
     table = fill_table(seq1, seq2, matrix, table, isGlobal)
-    info = print_table(seq1, seq2, table)
+    info = print_table(seq1, seq2, table, suppress)
     end = False
     x, y, new_seq1, new_seq2 = 0, 0, "", ""
     if not isGlobal:
@@ -260,14 +278,15 @@ def make_alignment(seq1, seq2, isNuc, matrix, isGlobal):
     print(new_seq2[::-1])
     if not isGlobal:
         print("de hoogste alignment score is", hoogste, "op de coordinaten", end_y, end_x)
-        print("van seq1 is " + str(start_x + 1) + ".." + str(end_x) + " van de " + str(len(seq1)) + " meegenomen voor de alignment")
-        print("van seq2 is " + str(start_y + 1) + ".." + str(end_y) + " van de " + str(len(seq2)) + " meegenomen voor de alignment")
+        print("van seq1 is " + str(start_x + 1) + ".." + str(end_x + 1) + " van de " + str(len(seq1)) + " meegenomen voor de alignment")
+        print("van seq2 is " + str(start_y + 1) + ".." + str(end_y + 1) + " van de " + str(len(seq2)) + " meegenomen voor de alignment")
     print("er waren", count, "momenten in de traceback waar twee opties even goed waren.")
-    print("alignment wordt opgeslagen in alignment.csv")
-    file = open("alignment.csv", "w")
+    print("alignment wordt opgeslagen in", fileName)
+    file = open(fileName, "w")
     for x in info:
         file.write(";".join(x) + "\n")
-    file.close()  
+    file.close()
+    return(new_seq1[::-1], new_seq2[::-2], info)
 
 def fill_table(seq1, seq2, matrix, table, isGlobal):
     for y in range(len(seq2)):
@@ -320,4 +339,4 @@ def make_table(seq1, seq2, matrix, isGlobal):
     return(new_table)
        
 
-main()
+do_alignments([TEST_SEQ1, TEST_SEQ2, TEST_SEQ3, TEST_SEQ4, TEST_SEQ5])
