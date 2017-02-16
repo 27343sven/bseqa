@@ -59,7 +59,7 @@ def check_db_exist(orglist):
 def JGI_connect():
     log("logging in to JGI")
     os.system("curl 'https://signon.jgi.doe.gov/signon/create' --data-urlencode 'login=sven@debijleveldjes.nl'" +
-              " --data-urlencode 'password=xaga8ufh137' -c cookies > /dev/null")
+              " --data-urlencode 'password=bpcogs1617' -c cookies > /dev/null")
 
 
 def download_JGI_proteome(org):
