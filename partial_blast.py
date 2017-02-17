@@ -114,15 +114,19 @@ def download_proteomes(proteoom_lijst, org_lijst):
             os.system("gunzip $(pwd)/prot/" + x[1:] + ".fa.gz")
     for x in org_lijst:
         if x[0] == ">":
-            os.system("cat {}.fa | awk -F\"|\" '{if (substr($0, 1, 1) == \">\"){print \">\"$3}else{print $0}}' > {}_temp.fa".format(x[1:], x[1:]))
-            os.system("cat {}_temp.fa > {}.fa".format(x[1:], x[1:]))
-            os.system("rm {}_temp.fa".format(x[1:]))
+            #os.system("cat {}.fa | awk -F\"|\" '{if (substr($0, 1, 1) == \">\"){print \">\"$3}else{print $0}}' > {}_temp.fa".format(x[1:], x[1:]))
+            #os.system("cat {}_temp.fa > {}.fa".format(x[1:], x[1:]))
+            #os.system("rm {}_temp.fa".format(x[1:]))
 
 
 def make_databases(org_lijst):
     for x in org_lijst:
-        log("making protein db for {}".format(x))
-        os.system("makeblastdb -in $(pwd)/prot/" + x + ".fa -parse_seqids -dbtype prot")
+        if x[0] == ">":
+            log("making protein db for {}".format(x[1:]))
+            os.system("makeblastdb -in $(pwd)/prot/" + x[1:] + ".fa -dbtype prot")
+        else:
+            log("making protein db for {}".format(x))
+            os.system("makeblastdb -in $(pwd)/prot/" + x + ".fa -parse_seqids -dbtype prot")
 
 def log(text):
     print("==LOG==", text)
@@ -171,7 +175,7 @@ def main():
         for x in proteoom_lijst:
             log("{}\t\t{}".format(x, proteoom_lijst[x]))
         download_proteomes(proteoom_lijst, org_lijst)
-        make_databases(new_org_lijst)
+        make_databases(org_lijst)
     blasts(new_org_lijst)
 
 
