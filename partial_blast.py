@@ -145,6 +145,7 @@ def blasts(org_lijst):
     log("~~~~blast")
     current = 0
     org_lijst2 = ["pha-ch", "mag-gr", "asp-cl", "pen-bi", "rhi-so"]
+    #org_lijst2 = ["eme-ni", "asp-ni", "hey-py", "pen-br", "sac-ce"]
     for x in range(len(org_lijst2)):
         for y in range(len(org_lijst)):
             if x != y:
