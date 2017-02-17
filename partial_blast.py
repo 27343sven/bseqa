@@ -157,7 +157,7 @@ def blasts(org_lijst):
                     #x] + ".fa -m 8 -N -b 1 > $(pwd)/blasts/" + org_lijst[y] + ":" + org_lijst[x])
                 #de -a optie is het aantal cores om te begruiken, pas deze aan voor meer performace
                 os.system("blastall -p blastp -d $(pwd)/prot/" + org_lijst[y] + ".fa -i $(pwd)/prot/" + org_lijst[
-                          x] + ".fa -m 8 -b 1 -P 1 -a 1> $(pwd)/blasts/" + org_lijst[y] + ":" + org_lijst[x])
+                          x] + ".fa -m 8 -b 1 -a 1 > $(pwd)/blasts/" + org_lijst[y] + ":" + org_lijst[x])
                 current += 1
 
 
