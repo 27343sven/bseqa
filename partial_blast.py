@@ -155,7 +155,7 @@ def blasts(org_lijst):
                 #os.system("screen -S " + org_lijst[x] + "_" + org_lijst[y] + " -m bash blast2 -p blastp -d $(pwd)/prot/" + org_lijst[y] + ".fa -i $(pwd)/prot/" + org_lijst[
                     #x] + ".fa -m 8 -N -b 1 > $(pwd)/blasts/" + org_lijst[y] + ":" + org_lijst[x])
                 os.system("blastall -p blastp -d $(pwd)/prot/" + org_lijst[y] + ".fa -i $(pwd)/prot/" + org_lijst[
-                          x] + ".fa -m 8 -b 1 > $(pwd)/blasts/" + org_lijst[y] + ":" + org_lijst[x])
+                          x] + ".fa -m 8 -b 1 -P 1> $(pwd)/blasts/" + org_lijst[y] + ":" + org_lijst[x])
                 current += 1
 
 
