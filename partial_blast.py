@@ -114,7 +114,7 @@ def download_proteomes(proteoom_lijst, org_lijst):
             os.system("gunzip $(pwd)/prot/" + x[1:] + ".fa.gz")
     for x in org_lijst:
         if x[0] == ">":
-            os.system("cat {}.fa | awk -F"|" '{if (substr($0, 1, 1) == ">"){print ">"$3}else{print $0}}' > {}_temp.fa".format(x[1:], x[1:]))
+            os.system("cat {}.fa | awk -F\"|\" '{if (substr($0, 1, 1) == \">\"){print \">\"$3}else{print $0}}' > {}_temp.fa".format(x[1:], x[1:]))
             os.system("cat {}_temp.fa > {}.fa".format(x[1:], x[1:]))
             os.system("rm {}_temp.fa".format(x[1:]))
 
