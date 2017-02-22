@@ -150,14 +150,14 @@ def blasts(org_lijst):
         for y in range(len(org_lijst)):
             if x != y:
                 if current == 0:
-                    log ("~~blasting {} tegen de database van {} voortgang: 0.00 %".format(org_lijst[x], org_lijst[y]))
+                    log ("~~blasting {} tegen de database van {} voortgang: 0.00 %".format(org_lijst2[x], org_lijst[y]))
                 else:
-                    log("~~blasting {} tegen de database van {} voortgang: {} %".format(org_lijst[x], org_lijst[y], round(((current + 1)/total) * 100, 2)))
+                    log("~~blasting {} tegen de database van {} voortgang: {} %".format(org_lijst2[x], org_lijst[y], round(((current + 1)/total) * 100, 2)))
                 #os.system("screen -S " + org_lijst[x] + "_" + org_lijst[y] + " -m bash blast2 -p blastp -d $(pwd)/prot/" + org_lijst[y] + ".fa -i $(pwd)/prot/" + org_lijst[
                     #x] + ".fa -m 8 -N -b 1 > $(pwd)/blasts/" + org_lijst[y] + ":" + org_lijst[x])
                 #de -a optie is het aantal cores om te begruiken, pas deze aan voor meer performace
-                os.system("blastall -p blastp -d $(pwd)/prot/" + org_lijst[y] + ".fa -i $(pwd)/prot/" + org_lijst[
-                          x] + ".fa -m 8 -b 1 -a 1 > $(pwd)/blasts/" + org_lijst[y] + ":" + org_lijst[x])
+                os.system("blastall -p blastp -d $(pwd)/prot/" + org_lijst[y] + ".fa -i $(pwd)/prot/" + org_lijst2[
+                          x] + ".fa -m 8 -b 1 -a 1 > $(pwd)/blasts/" + org_lijst[y] + ":" + org_lijst2[x])
                 current += 1
 
 
