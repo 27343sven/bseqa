@@ -49,7 +49,7 @@ De functie keert het volgende terug:
 """
 def BlastResults(br_naam1, br_naam2, br_pos1, br_pos2):
     singles = {}
-    twogdeellijst = OpenFile("blasts/"br_naam1+"_"+br_naam2)
+    twogdeellijst = OpenFile("blasts/" + br_naam1+"_"+br_naam2)
     for zin in twogdeellijst:             
         singles[(zin.split()[br_pos1] + " " + zin.split()[br_pos2])] = 0
     return singles.keys()
